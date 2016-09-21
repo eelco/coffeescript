@@ -264,7 +264,7 @@ test "don’t allow mixing of spaces and tabs for indentation", ->
     '''
     ok no
   catch e
-    eq 'indentation mismatch', e.message
+    eq 'indentation mismatch, expected a space', e.message
 
 test "each code block that starts at indentation 0 can use a different style", ->
   doesNotThrow ->
@@ -286,4 +286,4 @@ test "tabs and spaces cannot be mixed for indentation", ->
     '''
     ok no
   catch e
-    eq 'mixed indentation', e.message
+    eq 'mixed indentation, expected a tab', e.message

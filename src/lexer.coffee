@@ -320,13 +320,20 @@ exports.Lexer = class Lexer
     noNewlines = @unfinished()
 
     newIndentLiteral = if size > 0 then indent[-size..] else ''
-    unless /^(.?)\1*$/.exec newIndentLiteral
-      @error 'mixed indentation', offset: indent.length
+    if match = /^(.)\1*((?!\1).)/.exec newIndentLiteral
+      expected = if newIndentLiteral[0] is ' ' then 'space' else 'tab'
+      offset = indent.length - (newIndentLiteral.length - 1) + newIndentLiteral.indexOf match[1]
+      @error "mixed indentation, expected a #{expected}", offset: offset
       return indent.length
 
     minLiteralLength = Math.min newIndentLiteral.length, @indentLiteral.length
     if newIndentLiteral[...minLiteralLength] isnt @indentLiteral[...minLiteralLength]
-      @error 'indentation mismatch', offset: indent.length
+      firstDiff = 0
+      while firstDiff < minLiteralLength and newIndentLiteral[firstDiff] is @indentLiteral[firstDiff]
+        firstDiff++
+      expected = if @indentLiteral[firstDiff] is ' ' then 'space' else 'tab'
+      offset = indent.length - (newIndentLiteral.length - 1) + (firstDiff - 1)
+      @error "indentation mismatch, expected a #{expected}", offset: offset
       return indent.length
 
     if size - @indebt is @indent
