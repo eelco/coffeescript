@@ -51,7 +51,3 @@ and unordered lists, are fine:
   
   * List
 
-Tabs work too:
-
-				test "tabbed code", ->
-					ok yes
