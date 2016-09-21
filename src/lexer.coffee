@@ -322,7 +322,7 @@ exports.Lexer = class Lexer
     newIndentLiteral = if size > 0 then indent[-size..] else ''
     if match = /^(.)\1*((?!\1).)/.exec newIndentLiteral
       expected = if newIndentLiteral[0] is ' ' then 'space' else 'tab'
-      offset = indent.length - (newIndentLiteral.length - 1) + newIndentLiteral.indexOf match[1]
+      offset = indent.length - newIndentLiteral.length + newIndentLiteral.indexOf match[2]
       @error "mixed indentation, expected a #{expected}", offset: offset
       return indent.length
 
@@ -332,7 +332,7 @@ exports.Lexer = class Lexer
       while firstDiff < minLiteralLength and newIndentLiteral[firstDiff] is @indentLiteral[firstDiff]
         firstDiff++
       expected = if @indentLiteral[firstDiff] is ' ' then 'space' else 'tab'
-      offset = indent.length - (newIndentLiteral.length - 1) + (firstDiff - 1)
+      offset = indent.length - newIndentLiteral.length + firstDiff
       @error "indentation mismatch, expected a #{expected}", offset: offset
       return indent.length
 
